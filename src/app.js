@@ -1,17 +1,27 @@
 const express = require("express");
-
+const { adminAuth, userAuth} = require("./middlewares/auth")
 const app = express();
  
-app.use("/user",(req,res,next)=>{
-    //route handler
-    //app.use can handle any method
-    next();
-    console.log("1")
-   // res.send("route handler 1");
-},(req,res,next)=>{
-    console.log("2")
-    //res.send("route handler 2");
-    next();
+app.get("/user/getData", userAuth,(req,res)=>{
+    res.send("This is User data");
 })
+
+app.get("/user/delete", userAuth,(req,res)=>{
+    res.send("User Deleted");
+})
+
+app.get("/admin/getData", adminAuth, (req,res)=>{
+    throw new Error("data unable to fetch");
+    res.send("This is admin data")
+})
+
+app.get("/admin/delete",adminAuth,(req,res)=>{
+    res.send("Admin Deleted")
+})
+
+app.use("/",(err,req,res,next)=>{
+    res.send("something went wrong");
+})
+
 
 app.listen(3000);
